@@ -13,7 +13,7 @@ end
 # see https://fluxml.ai/Flux.jl/stable/models/advanced/
 
 # define the structure of the layer
-struct BinningLayer{S<:AbstractArray, T<:AbstractArray, N<:Number, M<:Number} 
+struct DomainBinner{S<:AbstractArray, T<:AbstractArray, N<:Number, M<:Number} 
     x::S # input values
     b::T # vector of bin edges
     b₁::N # start bin
@@ -21,7 +21,7 @@ struct BinningLayer{S<:AbstractArray, T<:AbstractArray, N<:Number, M<:Number}
 end
 
 # define layer constructor
-function BinningLayer(x::AbstractArray, N::Integer)
+function DomainBinner(x::AbstractArray, N::Integer)
     x_min = minimum(x) 
     x_max = maximum(x) 
     
@@ -31,15 +31,15 @@ function BinningLayer(x::AbstractArray, N::Integer)
     be = x_max
     b = Array(x_min+Δx:Δx:x_max-Δx) 
     
-    return BinningLayer(x, b, b1, be)
+    return DomainBinner(x, b, b1, be)
 end
 
 # set the trainable parameters to be bin positions within the boundaries
-#Flux.trainable(L::BinningLayer) = (L.b[2:end-1],)
-Flux.trainable(L::BinningLayer) = (L.b,)
+#Flux.trainable(L::DomainBinner) = (L.b[2:end-1],)
+Flux.trainable(L::DomainBinner) = (L.b,)
 
 # define how to call layer as a function
-function (BL::BinningLayer)(f::AbstractArray)
+function (BL::DomainBinner)(f::AbstractArray)
     # collect bins and sort in ascending order
     b = sort(vcat(BL.b₁,BL.b, BL.bₑ))
     x = BL.x
@@ -47,13 +47,13 @@ function (BL::BinningLayer)(f::AbstractArray)
     return fout
 end
 
-function getBinCenters(BL::BinningLayer)
+function getBinCenters(BL::DomainBinner)
     b = sort(vcat(BL.b₁,BL.b, BL.bₑ))
     [(b[i]+b[i-1])/2 for i ∈ 2:length(b)]
 end
 
 
-export BinningLayer
+export DomainBinner
 export getBinCenters
 export SmoothStep
 

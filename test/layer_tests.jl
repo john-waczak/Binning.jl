@@ -5,6 +5,6 @@ using Binning, Test
 
     # 2x + 3y
     x = -10:0.05:10
-    testBin = BinningLayer(x, 20)
+    testBin = DomainBinner(x, 20)
     @test length(testBin.b) == 19 # for 20 bins there are 19 interior edges
 end

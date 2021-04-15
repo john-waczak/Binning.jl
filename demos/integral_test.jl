@@ -23,7 +23,7 @@ savefig("../figures/smoothstep.pdf")
 #---- test binning layer action --------------------------
 x = Array(0:.1:10)
 f = sin.(x)
-testBinner = BinningLayer(x, 20)
+testBinner = DomainBinner(x, 20)
 binit = testBinner.b
 
 fnew = testBinner(f)
