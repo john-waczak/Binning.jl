@@ -39,18 +39,35 @@ end
 Flux.trainable(L::DomainBinner) = (L.b,)
 
 # define how to call layer as a function
+# Note
 function (BL::DomainBinner)(f::AbstractArray)
     # collect bins and sort in ascending order
     b = sort(vcat(BL.b₁,BL.b, BL.bₑ))
     x = BL.x
-    fout = [sum([f[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b)]
+
+    # we need to treat multidimensional data carefully since this isn't a matrix operation
+    # Think of rows as instances of data so that shape is (length data, num features)
+    if ndims(f) == 1
+        fout = [sum([f[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b)]
+    else
+        fout = [sum([f_row[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for f_row in eachrow(f),  i ∈ 2:length(b)]
+    end
+
     return fout
 end
+
+
+
 
 function getBinCenters(BL::DomainBinner)
     b = sort(vcat(BL.b₁,BL.b, BL.bₑ))
     [(b[i]+b[i-1])/2 for i ∈ 2:length(b)]
 end
+
+
+# not sure exactly what this is doing but it's in the docs
+Flux.@functor DomainBinner
+
 
 
 export DomainBinner
