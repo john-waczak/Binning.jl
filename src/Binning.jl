@@ -51,7 +51,7 @@ function (BL::DomainBinner)(f::AbstractArray)
         fout = [sum([f[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b)]
     else
         # fout = [sum([f_row[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for   f_row in eachrow(f),  i ∈ 2:length(b)]
-        fout = [sum([f_row[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b), f_row in eachrow(f)]
+        fout = [sum([f_col[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b), f_col in eachcol(f)]
         # fout = fout'
 
     end
