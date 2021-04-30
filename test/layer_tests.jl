@@ -12,8 +12,9 @@ using Binning, Test
     @test length(testBin(rand(100))) == 20
 
     # test that layer can be called on data batches
-    @test size(testBin(rand(2, 100))) == (2, 20)
-
+    # the output need to have the right shape for subsequent
+    # dense layers to be able to matrix multiply.
+    @test size(testBin(rand(2, 100))) == (20, 2)
 
 
 end
