@@ -40,25 +40,38 @@ Flux.trainable(L::DomainBinner) = (L.b,)
 
 # define how to call layer as a function
 # Note
-function (BL::DomainBinner)(f::AbstractArray)
+# function (BL::DomainBinner)(f::AbstractArray)
+#     # collect bins and sort in ascending order
+#     b = sort(vcat(BL.b₁,BL.b, BL.bₑ))
+#     x = BL.x
+
+#     # we need to treat multidimensional data carefully since this isn't a matrix operation
+#     # Think of rows as instances of data so that shape is (length data, num features)
+#     if ndims(f) == 1
+#         fout = [sum([f[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b)]
+#     else
+#         # fout = [sum([f_row[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for   f_row in eachrow(f),  i ∈ 2:length(b)]
+
+#         fout = [sum([f_col[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b), f_col in eachcol(f)]
+#         # fout = fout'
+
+#     end
+
+#     return fout
+# end
+
+function (BL::DomainBinner)(f::AbstractVector)
     # collect bins and sort in ascending order
     b = sort(vcat(BL.b₁,BL.b, BL.bₑ))
     x = BL.x
 
-    # we need to treat multidimensional data carefully since this isn't a matrix operation
-    # Think of rows as instances of data so that shape is (length data, num features)
-    if ndims(f) == 1
-        fout = [sum([f[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b)]
-    else
-        # fout = [sum([f_row[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for   f_row in eachrow(f),  i ∈ 2:length(b)]
-        fout = [sum([f_col[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b), f_col in eachcol(f)]
-        # fout = fout'
-
-    end
-
+    fout = [sum([f[j]*SmoothStep(x[j], b[i-1], b[i]) for j ∈ 1:length(x)]) for i ∈ 2:length(b)]
     return fout
 end
 
+# function (BL::DomainBinner)(f::AbstractArray)
+#     fout = BL.(eachcol(f))
+# end
 
 
 
@@ -73,8 +86,8 @@ Flux.@functor DomainBinner
 
 
 
+export SmoothStep
 export DomainBinner
 export getBinCenters
-export SmoothStep
 
 end
