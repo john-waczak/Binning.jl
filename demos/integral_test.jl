@@ -17,6 +17,7 @@ plot!(x, y, color=:red, label="signal")
 plot!(x, b_out, color=:green, label="binned signal")
 
 savefig("../figures/smoothstep.pdf")
+savefig("../figures/smoothstep.svg")
 
 
 
