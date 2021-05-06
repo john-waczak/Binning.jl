@@ -85,16 +85,16 @@ function main()
     ps₂ = params(D₁, D₂)
     ps₃ = params(Model)
 
-    @epochs 1 train!(loss, 0.01, Model, X, y, batch_idx, ps₂, "Oz-trainedDense_3.bson")
+    @epochs 1 train!(loss, 0.01, Model, X, y, batch_idx, ps₂, "Oz-trainedDense.bson")
 
     # reshuffle the batch
     batch_idx = getBatchIdxs(X, 100) # re
-    @epochs 1 train!(loss, 0.01, Model, X, y, batch_idx, ps₁, "Oz-trainedBinner_3.bson")
+    @epochs 1 train!(loss, 0.01, Model, X, y, batch_idx, ps₁, "Oz-trainedBinner.bson")
 
     # reshuffle the batch
     batch_idx = getBatchIdxs(X, 100)
-    @epochs 1 train!(loss, 0.01, Model, X, y, batch_idx, ps₃, "Oz-trainedWhole_3.bson")
-    
+    @epochs 1 train!(loss, 0.01, Model, X, y, batch_idx, ps₃, "Oz-trainedWhole.bson")
+
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
