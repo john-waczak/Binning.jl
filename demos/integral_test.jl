@@ -94,4 +94,4 @@ end
 xlabel!("bin(s)")
 ylabel!("count")
 savefig("../figures/trained_bin_comparison.pdf")
-display(p)
+savefig("../figures/trained_bin_comparison.png")

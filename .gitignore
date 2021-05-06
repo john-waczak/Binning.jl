@@ -27,3 +27,5 @@ Manifest.toml
 # don't add images to github
 *.pdf
 *.png
+
+
